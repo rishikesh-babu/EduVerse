@@ -6,6 +6,7 @@ import Signup from "../Pages/Shared/Signup";
 import ErrorElement from "../Components/Shared/ErrorElement";
 import About from "../Pages/User/About";
 import Chat from "../Pages/Shared/Chat";
+import UserProtectedLayout from "./UserProtectedLayout";
 
 const router = createBrowserRouter([
     {
@@ -30,8 +31,17 @@ const router = createBrowserRouter([
                 element: <Signup />
             },
             {
-                path: 'chat', 
-                element: <Chat/>
+                path: 'user', 
+                element: <UserProtectedLayout />, 
+                children: [
+                    {
+                        path: 'chat', 
+                        element: <Chat/>
+                    }
+                ]
+            }, 
+            {
+                path: 'admin', 
             }
         ]
     },

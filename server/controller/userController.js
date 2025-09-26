@@ -1,5 +1,5 @@
 const User = require("../Model/userModel");
-const { setCookies } = require("../utils/cookies");
+const { setCookies, clearCookies } = require("../utils/cookies");
 const { generateToken } = require("../utils/token");
 
 async function userLogin(req, res, next) {
@@ -83,7 +83,19 @@ async function userSignup(req, res, next) {
     }
 }
 
+async function userLogout(req, res, next) {
+    try {
+        console.log('Routes: Logout')
+        
+        clearCookies(res) 
+        return res.status(200).json({ message: 'Logout successful' })
+    } catch (err) {
+        next(err)
+    }
+}
+
 module.exports = {
     userLogin,
-    userSignup
+    userSignup, 
+    userLogout
 }
