@@ -5,9 +5,10 @@ export default function LandingPage() {
     <div className="bg-gradient-to-b from-indigo-50 to-white text-gray-800">
       {/* Hero Section */}
       <section className="max-w-6xl mx-auto px-6 py-20 text-center">
-        <h1 className="text-5xl font-bold mb-6 text-indigo-700">
-          EduVerse
-        </h1>
+          <div className="flex justify-center">
+          <img src="/EduVerse.png" alt="EduVerse_Logo" />
+
+          </div>
         <p className="text-lg md:text-xl max-w-3xl mx-auto mb-8">
           An offline-first, online-enhanced AI Teacher making education
           accessible, inclusive, and resilient for every child — anywhere in the world.
