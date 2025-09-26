@@ -1,4 +1,5 @@
 const express = require('express')
+const { adminSignup } = require('../controller/adminController')
 const router = express.Router()
 
 router.use((req, res, next) => {
@@ -6,7 +7,7 @@ router.use((req, res, next) => {
     next()
 })
 
-router.post('/login')
+router.post('/signup', adminSignup)
 
 const adminRouter = router
 module.exports = adminRouter

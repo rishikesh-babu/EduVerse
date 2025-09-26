@@ -1,5 +1,7 @@
 const express = require('express');
 const userRoutes = require('./userRoutes');
+const { adminAuth } = require('../middlewares/adminAuth');
+const { createClass } = require('../controller/classController');
 const router = express.Router();
 
 router.use((req, res, next) => {
@@ -8,6 +10,7 @@ router.use((req, res, next) => {
 })
 
 router.use('/user', userRoutes)
+router.use('/class', adminAuth, createClass)
 
 const apiRouter = router
 module.exports = apiRouter;

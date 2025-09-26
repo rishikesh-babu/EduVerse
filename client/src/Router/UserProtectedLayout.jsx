@@ -1,6 +1,6 @@
 import React, { use, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 
 export default function UserProtectedLayout() {
     const { isUserAuth } = useSelector(state => state.user)
@@ -11,7 +11,7 @@ export default function UserProtectedLayout() {
             navigate('/login')
         }
     }, [ isUserAuth])
-    
+
     return (
         <div>
             <Outlet />
