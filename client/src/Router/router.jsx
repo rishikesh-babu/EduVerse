@@ -49,7 +49,7 @@ const router = createBrowserRouter([
         element: <AdminLayout />,
         children: [
             {
-                path: '/',
+                path: 'dashboard',
                 element: <AdminHome />
             },
         ]

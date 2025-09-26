@@ -44,7 +44,7 @@ export default function Login() {
                     console.log('res?.data?.message :>> ', res?.data?.message);
                     toast.success(res?.data?.message)
                     dispatch(saveUserData(res?.data?.data));
-                    res?.data?.data?.role === "admin" ? navigate("/admin") : navigate("/")
+                    res?.data?.data?.role === "admin" ? navigate("/admin/dashboard") : navigate("/")
 
                 })
                 .catch((err) => {
