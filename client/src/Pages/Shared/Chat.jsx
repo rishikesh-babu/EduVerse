@@ -73,14 +73,14 @@ export default function Chat() {
     console.log('fileInput :>> ', fileInput);
 
     return (
-        <div className="h-[100dvh] bg-gray-900 text-gray-200 font-sans flex flex-col justify-between">
-            <header className="sticky top-0 z-10 bg-gray-800/50 backdrop-blur-sm border-b border-gray-700">
+        <div className="h-[90dvh] bg-gray-900 text-gray-200 font-sans flex flex-col justify-between">
+            {/* <header className="sticky top-0 z-10 bg-gray-800/50 backdrop-blur-sm border-b border-gray-700">
                 <div className="max-w-4xl mx-auto p-4">
                     <h1 className="text-xl font-bold text-center bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
                         AiChatBot
                     </h1>
                 </div>
-            </header>
+            </header> */}
 
             <main className="grow p-6 w-full max-w-4xl mx-auto overflow-y-auto flex flex-col gap-6">
                 {messages.map((message) => (
@@ -159,7 +159,7 @@ export default function Chat() {
                         className="flex-grow py-2 px-4 text-white bg-transparent rounded-full outline-none transition-shadow"
                     />
                     <button
-                        className='text-white select-none cursor-pointer hover:scale-105 transition-all duration-200 '
+                        className='fill-white select-none cursor-pointer hover:scale-105 transition-all duration-200 '
                         onClick={handleSendMessage}
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill=""><path d="M452-244v-400L282-477l-42-43 241-241 241 241-42 42-168-168v402h-60Z" /></svg>
