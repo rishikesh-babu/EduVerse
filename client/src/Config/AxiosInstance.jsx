@@ -1,6 +1,6 @@
-const { base } = require("daisyui/imports");
+import { Axios } from "axios";
 
-const axiosInstance = axios.create({
+const axiosInstance = Axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
     withCredentials: true,
 })
