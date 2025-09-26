@@ -35,7 +35,6 @@ export default function Chat() {
         setNewMessage('');
         setIsLoading(true);
 
-        // Mock API call
         try {
             await new Promise(resolve => setTimeout(resolve, 1000));
             const botMessage = {
@@ -135,8 +134,7 @@ export default function Chat() {
                 )}
 
                 <div className="flex items-center gap-2" onSubmit={handleSendMessage}>
-
-                    <div className=" fixed hover:scale-105">
+                    <div className="hover:scale-105">
                         <label htmlFor="fileInput" className='cursor-pointer '>
                             <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="40px" fill="#fff">
                                 <path d="M446.67-446.67H200v-66.66h246.67V-760h66.66v246.67H760v66.66H513.33V-200h-66.66v-246.67Z" />
@@ -158,13 +156,13 @@ export default function Chat() {
                         onKeyDown={(e => { e.key === 'Enter' && handleSendMessage(e) })}
                         placeholder="Type your message here..."
                         disabled={isLoading}
-                        className="flex-grow py-2 px-4 text-white rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition-shadow"
+                        className="flex-grow py-2 px-4 text-white bg-transparent rounded-full outline-none transition-shadow"
                     />
                     <button
-                        className='bg-gray-300 hover:bg-gray-100 border rounded-full select-none cursor-pointer hover:scale-105 transition-all duration-200 '
+                        className='text-white select-none cursor-pointer hover:scale-105 transition-all duration-200 '
                         onClick={handleSendMessage}
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="black"><path d="M452-244v-400L282-477l-42-43 241-241 241 241-42 42-168-168v402h-60Z" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill=""><path d="M452-244v-400L282-477l-42-43 241-241 241 241-42 42-168-168v402h-60Z" /></svg>
                     </button>
 
                 </div>
