@@ -1,14 +1,23 @@
 import { createBrowserRouter } from "react-router-dom";
+import UserLayout from "./UserLayout";
+import Home from "../Pages/Home";
+import Login from "../Pages/Login";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <div className="w-full h-screen bg-black text-white">hello</div>
+        element: <UserLayout />, 
+        children: [
+            {
+                path: '/', 
+                element: <Home />
+            }, 
+            {
+                path: 'login', 
+                element: <Login />
+            }
+        ]
     },
-    {
-        path: 'login',
-        element: <div className="w-full h-screen bg-black text-white">login</div>
-    }
 ])
 
 export default router;
