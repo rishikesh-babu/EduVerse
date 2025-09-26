@@ -23,6 +23,8 @@ app.listen(port, (err) => {
 app.use((req, res, next) => {
     console.log('\nMethod: ', req.method);
     console.log('Path: ', req.path);
+
+    next()
 })
 
 // Base Router
