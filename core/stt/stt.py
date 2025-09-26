@@ -1,64 +1,59 @@
 import os
-import json
 import sys
-import queue
-import sounddevice as sd
+import pyaudio
 from vosk import Model, KaldiRecognizer
 
-MODEL_DIR = os.path.join(os.path.dirname(__file__), "models")
+# Base directory of this script (core/stt/)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Map languages to model folders
 LANG_TO_PATH = {
-    "en-in": r"C:\Users\Shane\OneDrive\Desktop\EduVerse\EduVerse\core\stt\models\vosk-model-small-en-in-0.4",
-    "en-us": r"C:\Users\Shane\OneDrive\Desktop\EduVerse\EduVerse\core\stt\models\vosk-model-small-en-us-0.15",
-    "hi":    r"C:\Users\Shane\OneDrive\Desktop\EduVerse\EduVerse\core\stt\models\vosk-model-small-hi-0.22",
+    "en-in": os.path.join(BASE_DIR, "models", "vosk-model-small-en-in-0.4"),
+    "en-us": os.path.join(BASE_DIR, "models", "vosk-model-small-en-us-0.15"),
+    "hi":    os.path.join(BASE_DIR, "models", "vosk-model-small-hi-0.22"),
 }
 
-SAMPLE_RATE = 16000
-BLOCKSIZE = 8000  # bigger block → fewer callbacks
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: python stt/stt.py [en-in|hi|en-us]")
+        exit(1)
 
-# --------- core engine ----------
-def load_model(lang_key: str) -> Model:
-    if lang_key not in LANG_TO_PATH:
-        raise ValueError(f"Unsupported lang '{lang_key}'. Use one of: {list(LANG_TO_PATH.keys())}")
-    path = LANG_TO_PATH[lang_key]
-    if not os.path.isdir(path):
-        raise FileNotFoundError(f"Model folder not found: {path}")
-    print(f"[STT] Loading model: {lang_key} → {path}")
-    return Model(model_path=path)
+    lang = sys.argv[1]
+    if lang not in LANG_TO_PATH:
+        print(f"[ERROR] Unsupported language: {lang}")
+        exit(1)
 
-def recognize_stream(model: Model):
-    rec = KaldiRecognizer(model, SAMPLE_RATE)
-    q = queue.Queue()
+    model_path = LANG_TO_PATH[lang]
+    print(f"[STT] Loading model: {lang} → {model_path}")
 
-    def _callback(indata, frames, time, status):
-        if status:
-            print("[audio]", status, flush=True)
-        q.put(bytes(indata))
+    if not os.path.exists(model_path):
+        print("[ERROR] Model path does not exist:", model_path)
+        exit(1)
 
-    print("You May Speak(Ctrl+C to exit)…")
-    with sd.RawInputStream(samplerate=SAMPLE_RATE, blocksize=BLOCKSIZE, dtype="int16",
-                           channels=1, callback=_callback):
-        while True:
-            data = q.get()
-            if rec.AcceptWaveform(data):
-                res = json.loads(rec.Result())
-                text = (res.get("text") or "").strip()
-                if text:
-                    print(f"You said: {text}")
-            else:
-                # Optional: show partials while speaking
-                # partial = json.loads(rec.PartialResult()).get("partial", "")
-                # if partial:
-                #     print("...", partial, end="\r")
-                pass
-
-# --------- entrypoint ----------
-if __name__ == "__main__":
-    # Allow language selection via CLI: python stt.py en-in|hi|en-us
-    lang = sys.argv[1] if len(sys.argv) > 1 else "en-in"
     try:
-        model = load_model(lang)
-        recognize_stream(model)
+        model = Model(model_path)
     except Exception as e:
-        print("[ERROR]", e)
-        print("Usage: python core/stt/stt.py [en-in|hi|en-us]")
-        sys.exit(1)
+        print("[ERROR] Failed to load model:", e)
+        exit(1)
+
+    recognizer = KaldiRecognizer(model, 16000)
+
+    mic = pyaudio.PyAudio()
+    stream = mic.open(rate=16000, channels=1, format=pyaudio.paInt16,input=True, frames_per_buffer=8192)
+    stream.start_stream()
+
+    print("🎤 Speak (Ctrl+C to exit)...")
+    try:
+        while True:
+            data = stream.read(4096, exception_on_overflow=False)
+            if recognizer.AcceptWaveform(data):
+                print("[FINAL]", recognizer.Result())
+
+    except KeyboardInterrupt:
+        print("\n[INFO] Exiting...")
+        stream.stop_stream()
+        stream.close()
+        mic.terminate()
+
+if __name__ == "__main__":
+    main()
