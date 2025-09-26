@@ -50,7 +50,7 @@ const router = createBrowserRouter([
         children: [
             {
                 path: '/',
-                children: <AdminHome />
+                element: <AdminHome />
             },
         ]
 
