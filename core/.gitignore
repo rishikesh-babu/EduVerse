@@ -1,0 +1,28 @@
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual env
+.venv/
+env/
+venv/
+
+# Logs
+*.log
+
+# Data/Model
+*pt
+*.bin
+*.onx
+*.h5
+*.weights
+*.ckpt
+*.tar.gz
+*.zip
+*.pdf
+*.txt
+
+# Jupyter
+.ipynb_checkpoints/
