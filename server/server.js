@@ -10,6 +10,8 @@ connectDB();
 
 const app = express();
 
+app.use(cors())
+
 app.listen(port, (err) => {
     if (!err) {
         console.log(`Server is running on port ${port}`);
