@@ -1,4 +1,6 @@
 const User = require("../Model/userModel");
+const { setCookies } = require("../utils/cookies");
+const { generateToken } = require("../utils/token");
 
 async function userLogin(req, res, next) {
     try {
@@ -31,6 +33,9 @@ async function userLogin(req, res, next) {
 
         userExist = userExist.toObject()
         delete userExist.password
+
+        const token = generateToken(userExist, 'user')
+        setCookies(res, token)
 
         return res.status(200).json({ message: 'Login successful', data: userExist })
     } catch (err) {
