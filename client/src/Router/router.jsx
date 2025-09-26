@@ -7,44 +7,54 @@ import ErrorElement from "../Components/Shared/ErrorElement";
 import About from "../Pages/User/About";
 import Chat from "../Pages/Shared/Chat";
 import UserProtectedLayout from "./UserProtectedLayout";
+import AdminLayout from "./AdminLayout";
+import AdminHome from "../Pages/Admin/AdminHome";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <UserLayout />,
-        errorElement: <ErrorElement />, 
+        errorElement: <ErrorElement />,
         children: [
             {
-                path: '/', 
+                path: '/',
                 element: <Home />
-            }, 
+            },
             {
-                path: 'login', 
+                path: 'login',
                 element: <Login />
             },
             {
-                path: 'about', 
+                path: 'about',
                 element: <About />
             },
             {
-                path: 'signup', 
+                path: 'signup',
                 element: <Signup />
             },
             {
-                path: 'user', 
-                element: <UserProtectedLayout />, 
+                path: 'user',
+                element: <UserProtectedLayout />,
                 children: [
                     {
-                        path: 'chat', 
-                        element: <Chat/>
+                        path: 'chat',
+                        element: <Chat />
                     }
                 ]
-            }, 
-            {
-                path: 'admin', 
             }
         ]
     },
+    {
+        path: 'admin',
+        element: <AdminLayout />,
+        children: [
+            {
+                path: '/',
+                children: <AdminHome />
+            },
+        ]
+
+    }
 ])
 
 export default router;

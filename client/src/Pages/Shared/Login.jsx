@@ -42,14 +42,15 @@ export default function Login() {
                 .then((res) => {
                     console.log('res :>> ', res);
                     console.log('res?.data?.message :>> ', res?.data?.message);
-                    toast.success(res.data.message)
+                    toast.success(res?.data?.message)
                     dispatch(saveUserData(res?.data?.data));
-                    navigate("/")
+                    res?.data?.data?.role === "admin" ? navigate("/admin") : navigate("/")
+
                 })
                 .catch((err) => {
                     console.log('err :>> ', err);
-                    console.log('err.response?.data?.message :>> ', err.response?.data?.message);
-                    toast.error(err.response?.data?.message || 'Something went wrong')
+                    console.log('err.response?.data?.message :>> ', err?.response?.data?.message);
+                    toast.error(err?.response?.data?.message || 'Something went wrong')
                 }),
             {
                 pending: 'Logging in...',
