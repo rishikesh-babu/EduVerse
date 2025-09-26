@@ -6,6 +6,8 @@ async function userLogin(req, res, next) {
 
         let { email, password } = req.body
 
+        console.log('req.body :>> ', req.body);
+
         email = email?.trim()
         password = password?.trim()
 
@@ -14,10 +16,14 @@ async function userLogin(req, res, next) {
         }
 
         let userExist = await User.findOne({ email })
-
+        
+        console.log('userExist :>> ', userExist);
         if (!userExist) {
             return res.status(404).json({ message: 'User does not exist' })
         }
+
+        console.log('userExist.password :>> ', userExist.password);
+        console.log('password :>> ', password);
 
         if (userExist.password !== password) {
             return res.status(401).json({ message: 'Invalid password' })
