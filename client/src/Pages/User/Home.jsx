@@ -33,6 +33,16 @@ export default function LandingPage() {
         </p>
       </section>
 
+      {/* Vision Section */}
+      <section className="bg-indigo-600 text-white py-16 px-6 text-center">
+        <h2 className="text-3xl font-bold mb-6">🎯 Impact & Vision</h2>
+        <p className="max-w-3xl mx-auto text-lg">
+          EduVerse is more than a hackathon project — it’s a step toward
+          building a universal AI teacher: multilingual, inclusive, adaptive, and
+          resilient against barriers of geography, language, or disability.
+        </p>
+      </section>
+
       {/* Solution Section with Animations */}
       <section className="bg-indigo-50 py-16 px-6">
         <div className="max-w-5xl mx-auto">
@@ -84,16 +94,6 @@ export default function LandingPage() {
             </motion.div>
           </div>
         </div>
-      </section>
-
-      {/* Vision Section */}
-      <section className="bg-indigo-600 text-white py-16 px-6 text-center">
-        <h2 className="text-3xl font-bold mb-6">🎯 Impact & Vision</h2>
-        <p className="max-w-3xl mx-auto text-lg">
-          EduVerse is more than a hackathon project — it’s a step toward
-          building a universal AI teacher: multilingual, inclusive, adaptive, and
-          resilient against barriers of geography, language, or disability.
-        </p>
       </section>
     </div>
   );
