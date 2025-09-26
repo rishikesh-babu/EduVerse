@@ -3,6 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const apiRouter = require('./router');
 const connectDB = require('./config/db');
+const cookieParser = require('cookie-parser');
 
 dotenv.config();
 connectDB();
@@ -16,6 +17,7 @@ app.use(cors({
 }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
 
 app.listen(port, (err) => {
     if (!err) {

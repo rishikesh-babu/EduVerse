@@ -7,8 +7,7 @@ export default function UserLayout() {
   return (
     <div>
       <Navbar />
-      <div className='pt-20'>
-
+      <div className='pt-19'>
         <Outlet />
       </div>
      <Footer/>
