@@ -10,17 +10,6 @@ export default function AdminNavBar() {
 
             <div className="fixed top-0 left-0 flex w-full bg-white shadow-md z-20 justify-between">
 
-                <div className='flex justify-between items-center'>
-                    <div className="flex-1 sm:flex justify-start items-center">
-                        <img
-                            src="/EduVerse.png"
-                            alt="Logo"
-                            className="h-[4.5rem] object-contain"
-                        />
-                    </div>
-
-                </div>
-                
                 <div className='flex justify-end'>
 
 
@@ -55,6 +44,17 @@ export default function AdminNavBar() {
                                 />
                             </svg>}
                     </button>
+                </div>
+
+                <div className='flex justify-between items-center'>
+                    <div className="flex-1 sm:flex justify-start items-center">
+                        <img
+                            src="/EduVerse.png"
+                            alt="Logo"
+                            className="h-[4.5rem] object-contain"
+                        />
+                    </div>
+
                 </div>
             </div>
             {open && (<SiderBar />)}
