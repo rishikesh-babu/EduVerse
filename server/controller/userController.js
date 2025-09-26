@@ -74,7 +74,8 @@ async function userSignup(req, res, next) {
         saveUser = saveUser.toObject()
         delete saveUser.password
 
-        console.log('saveUser :>> ', saveUser);
+        const token = generateToken(userExist, 'user')
+        setCookies(res, token)
 
         return res.status(201).json({ message: 'User registered successfully', data: saveUser })
     } catch (err) {
