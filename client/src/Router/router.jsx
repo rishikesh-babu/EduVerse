@@ -5,6 +5,7 @@ import Login from "../Pages/Shared/Login";
 import Signup from "../Pages/Shared/Signup";
 import ErrorElement from "../Components/Shared/ErrorElement";
 import About from "../Pages/User/About";
+import Chat from "../Pages/Shared/Chat";
 
 const router = createBrowserRouter([
     {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
             {
                 path: 'signup', 
                 element: <Signup />
+            },
+            {
+                path: 'chat', 
+                element: <Chat/>
             }
         ]
     },
