@@ -1,12 +1,13 @@
 const jwt = require('jsonwebtoken')
-const { Admin } = require('../model/adminModel')
+const Class = require('../Model/classModel')
+const User = require('../Model/userModel')
 
 async function adminAuth(req, res, next) {
     try {
         console.log('Routes: admin auth')
-        
+
         const token = req.cookies.token
-        
+
         if (!token) {
             return res.status(401).json({ message: 'Unauthorized admin' })
         }
@@ -18,15 +19,15 @@ async function adminAuth(req, res, next) {
             return res.status(401).json({ message: 'Unauthorized admin' })
         }
 
-        const adminId = decodedToken.id
-        const adminExist = await Admin.findById(adminId).select('-password')
+        const userId = decodedToken.id
+        const userExist = await User.findById(userId).select('-password')
 
-        if (!adminExist) {
+        if (!userExist) {
             return res.status(401).json({ message: 'Unauthorized admin' })
         }
 
         req.user = decodedToken
-        
+
         next()
 
     } catch (err) {
@@ -34,4 +35,7 @@ async function adminAuth(req, res, next) {
     }
 }
 
-module.exports = { adminAuth }
+
+module.exports = {
+    adminAuth,
+}

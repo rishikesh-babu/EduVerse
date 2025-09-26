@@ -7,7 +7,7 @@ export default function AdminLayout() {
   return (
     <div>
         <AdminNavBar />
-        <Outlet/>
+        <Outlet />
         <AdminFooter/>
     </div>
   )
