@@ -1,8 +1,6 @@
 vosk
-sounddevice
+pyaudio
 opencv-python
-faiss-cpu
-transformers
-torch
-sentence-transformers
 numpy
+deepface
+tf-keras

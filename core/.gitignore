@@ -10,7 +10,7 @@ env/
 venv/
 
 # Ignore model folders
-core/stt/models/
+stt/models/
 
 # Logs
 *.log
