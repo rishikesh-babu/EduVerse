@@ -1,0 +1,8 @@
+vosk
+sounddevice
+opencv-python
+faiss-cpu
+transformers
+torch
+sentence-transformers
+numpy

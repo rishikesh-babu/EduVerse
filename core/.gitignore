@@ -9,6 +9,9 @@ __pycache__/
 env/
 venv/
 
+# Ignore model folders
+core/stt/models/
+
 # Logs
 *.log
 
