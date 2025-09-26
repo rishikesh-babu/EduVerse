@@ -1,10 +1,13 @@
 import { motion } from "framer-motion";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export default function LandingPage() {
+
+  const navigate = useNavigate()
   return (
     <div className="bg-gradient-to-b from-indigo-50 to-white text-gray-800">
       {/* Hero Section */}
-      <section className="max-w-6xl mx-auto px-6 py-20 text-center">
+      <section className="max-w-6xl mx-auto px-6 py-20  text-center">
         <h1 className="text-5xl font-bold mb-6 text-indigo-700">
           EduVerse
         </h1>
@@ -12,7 +15,7 @@ export default function LandingPage() {
           An offline-first, online-enhanced AI Teacher making education
           accessible, inclusive, and resilient for every child — anywhere in the world.
         </p>
-        <button className="px-6 py-3 bg-indigo-600 text-white rounded-2xl shadow-lg hover:bg-indigo-700 transition">
+        <button onClick={() => navigate('/chat')} className="px-6 py-3 bg-indigo-600 text-white rounded-2xl shadow-lg hover:bg-indigo-700 transition">
           🚀 Try Demo
         </button>
       </section>

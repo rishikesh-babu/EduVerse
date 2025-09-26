@@ -15,7 +15,7 @@ export default function Video() {
   }, []);
 
   return (
-     <div
+    <div
       className="
         fixed bottom-32 right-0 z-50
         w-[300px] h-{300px}
@@ -23,13 +23,13 @@ export default function Video() {
         p-2
       "
     >
-     {/* <video
+      <video
         ref={videoRef}
         autoPlay
         playsInline
         muted
         className="w-full h-full object-cover rounded-md shadow-xl"
-      />*/}
+      />
     </div>
   );
 };
