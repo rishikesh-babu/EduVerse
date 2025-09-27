@@ -24,10 +24,11 @@ export const SiderBar = () => {
     ]
     return (
         <div>
-            <div className="w-56 min-h-screen bg-transparent shadow-md px-6 py-20 space-y-4 sticky bottom-0 hidden md:block">
+            <div className='font-bold'>
+                Dashboard
             </div>
 
-            <div className="fixed w-56 min-h-screen bg-white shadow-md px-6 py-20 mt-4 space-y-4 top-0 left-0 bottom-0 z-30 overflow-y-auto hide-scrollbar">
+            <div className="w-56 min-h-screen bg-white shadow-md px-6 py-20 mt-4 space-y-4 top-0 left-0 bottom-0 z-30 overflow-y-auto hide-scrollbar">
                 {sideBarContents.map((item, index) => (
                     <Link
                         to={item.link}
