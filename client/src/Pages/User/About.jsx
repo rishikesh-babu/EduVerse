@@ -1,12 +1,11 @@
 export default function AboutPage() {
   return (
-    <div className="bg-gradient-to-b from-white to-indigo-50 text-gray-800">
+    <div className="pt-16 bg-gradient-to-b from-white to-indigo-50 text-gray-800">
       <br />
       <br />
       <div className="flex justify-center">
       <img src="/EduVerse.png" alt="EduVerse_Logo" />
       </div>
-      {/* Who We Are */}
       <section className="max-w-5xl mx-auto px-6 py-20 text-center">
         <h1 className="text-5xl font-bold mb-6 text-indigo-700">👩‍💻 Who We Are</h1>
         <p className="text-lg max-w-3xl mx-auto mb-12">
@@ -16,10 +15,10 @@ export default function AboutPage() {
         </p>
         <div className="grid md:grid-cols-2 gap-8">
           {[
-            { name: "Teammate 1", role: "Founder & Developer", fact: "Loves turning weekend ideas into working prototypes." },
-            { name: "Teammate 2", role: "AI Engineer", fact: "Inspired by the dream of teaching kids in their own language." },
-            { name: "Teammate 3", role: "UI/UX Designer", fact: "Believes tech should be beautiful *and* inclusive." },
-            { name: "Teammate 4", role: "Backend Developer", fact: "Wants a clean backend."}
+            { name: "Renet Mammen Reji", role: "Team Lead & UI/UX Designer", fact: "Loves turning weekend ideas into working prototypes." },
+            { name: "Shane Varughese Jacob", role: "AI Engineer", fact: "Inspired by the dream of teaching kids in their own language." },
+            { name: "Savio Shaju", role: "Frontend Developer", fact: "Believes tech should be beautiful *and* inclusive." },
+            { name: "Rishikesh Babu", role: "Backend Developer", fact: "Wants a clean backend."}
           ].map((member, i) => (
             <div
               key={i}
@@ -37,7 +36,7 @@ export default function AboutPage() {
       </section>
 
       {/* Story Behind the Idea */}
-      <section className="max-w-5xl mx-auto px-6 py-12items-center">
+      <section className="max-w-5xl mx-auto px-6 py-12 items-center">
         <div className="space-y-4">
           <h2 className="text-3xl font-semibold text-indigo-600 text-center">📖 The Story Behind the Idea 📖</h2>
           <p className="text-lg leading-relaxed">

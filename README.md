@@ -40,11 +40,30 @@ The Live Link of the Project is given below:
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React + Vite  
-- **Styling**: Tailwind CSS  
-- **Animations**: Framer Motion (optional, can use Tailwind transitions)  
-- **State Management**: Redux Toolkit  
-- **Notifications**: React Toastify  
+**Frontend**  
+- **React + Vite** → fast, modular, component-driven UI  
+- **Tailwind CSS** → responsive, utility-first styling  
+- **Framer Motion** → smooth animations and transitions  
+- **Redux Toolkit** → predictable, scalable state management  
+- **React Toastify** → real-time notifications and alerts  
+
+**Backend**  
+- **Node.js + Express.js** → REST API, server logic, and content delivery  
+
+**AI & Accessibility**  
+- **Speech-to-Text API (English + Hindi)** → voice input for accessibility and learning  
+- **Captioning & Multilingual Support** → inclusive interaction across literacy levels  
+- **Sign-Language Avatar** *(planned)* → bridging accessibility for hearing-impaired learners  
+
+**Offline & Resilience**  
+- **Progressive Web App (PWA)** → caching and offline-first usage  
+- **IndexedDB / Local Storage** → persistence of learning modules and user progress  
+
+**Deployment & Scalability**  
+- **Render** → deployment platform for both frontend and backend  
+- Cloud-ready backend to scale APIs and AI services  
+- Extendable architecture to support multilingual content and additional accessibility features  
+ 
 
 ---
 
@@ -77,10 +96,9 @@ The Live Link of the Project is given below:
     ```bash
     npm install
 
-    and then
-
-    ```bash
+and then
     npm start
+
 
 
 
