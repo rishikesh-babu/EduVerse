@@ -11,7 +11,7 @@ router.use((req, res, next) => {
 
 router.post('/create', adminAuth, upload.single('file'), createSubject)
 router.get('/get-all-subjects', getAllSubject)
-router.get('get-subject:/classId', getSubjects)
+router.get('/get-subject/:classId', getSubjects)
 
 const subjectRouter = router
 module.exports = subjectRouter
