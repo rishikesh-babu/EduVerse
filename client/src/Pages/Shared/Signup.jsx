@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import axiosInstance from '../../Config/AxiosInstance'
+import { useDispatch } from 'react-redux'
+import { saveUserData } from '../../redux/features/userSlice'
 
 export default function Signup() {
-      const navigate = useNavigate()
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
     const [formData, setFormData] = useState({
         first_name: '',
         middle_name: '',
@@ -25,11 +31,9 @@ export default function Signup() {
     })
     const [confirmPasswordValidation, setConfirmPasswordValidation] = useState({
         isSame: false
-
     })
 
     useEffect(() => {
-
         if (formData.password) {
             setPasswordValidation({
                 hasUpperCase: /[A-Z]/.test(formData.password),
@@ -76,7 +80,6 @@ export default function Signup() {
                 [name]: ''
             })
         }
-
     }
 
     const validateForm = () => {
@@ -144,11 +147,20 @@ export default function Signup() {
             email: formData.email,
             phone: formData.phone_number,
             password: formData.password,
-            role: "user"
         };
 
-
-
+        toast.promise(
+            axiosInstance({
+                method: 'POST',
+                url: '/user/signup',
+                data: payload
+            })
+                .then((res) => {
+                    dispatch(saveUserData(res?.data?.data));
+                    toast.success(res?.data?.message)
+                    navigate('/')   
+                })
+        )
     }
     return (
         <div className="max-w-2xl mx-auto  mt-24 mb-8 bg-white rounded-xl shadow-2xl p-8">
