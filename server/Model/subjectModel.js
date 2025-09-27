@@ -19,3 +19,6 @@ const subjectModel = new mongoose.Schema({
         default: Date.now,
     }
 })
+
+const Subject = mongoose.model('Subject', subjectModel)
+module.exports = Subject

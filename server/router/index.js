@@ -11,6 +11,7 @@ router.use((req, res, next) => {
 
 router.use('/user', userRoutes)
 router.use('/class', adminAuth, createClass)
+// router.use('/subject')
 
 const apiRouter = router
 module.exports = apiRouter;
