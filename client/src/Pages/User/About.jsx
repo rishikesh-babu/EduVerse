@@ -14,11 +14,12 @@ export default function AboutPage() {
           this hackathon with one goal — to make learning accessible for every
           child, no matter where they are.
         </p>
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 gap-8">
           {[
             { name: "Teammate 1", role: "Founder & Developer", fact: "Loves turning weekend ideas into working prototypes." },
             { name: "Teammate 2", role: "AI Engineer", fact: "Inspired by the dream of teaching kids in their own language." },
             { name: "Teammate 3", role: "UI/UX Designer", fact: "Believes tech should be beautiful *and* inclusive." },
+            { name: "Teammate 4", role: "Backend Developer", fact: "Wants a clean backend."}
           ].map((member, i) => (
             <div
               key={i}
@@ -55,7 +56,7 @@ export default function AboutPage() {
           Millions of kids lack reliable internet and teachers.  
           Current AI tutors don’t work offline, ignore local languages, and
           exclude children with disabilities.  
-          We chose this challenge because <span className="font-semibold">education should never stop</span>.
+          We chose this challenge because <span className="font-semibold underline">education should never stop</span>.
         </p>
       </section>
 
