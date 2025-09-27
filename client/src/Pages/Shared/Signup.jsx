@@ -137,7 +137,6 @@ export default function Signup() {
         if (!validateForm()) {
             return
         }
-        setIsSubmitting(true)
         const fullName = formData.middle_name
             ? `${formData.first_name} ${formData.middle_name} ${formData.last_name}`
             : `${formData.first_name} ${formData.last_name}`;
