@@ -17,7 +17,7 @@ export default function AdminNavBar({ children }) {
 
     return (
         <>
-            <div className="w-full bg-green-200 shadow-md px-4 py-3 flex items-center justify-between fixed top-0 z-40">
+            <div className="w-full bg-green-200 shadow-md px-4 py-3 flex items-center justify-between z-50">
                 <div className='flex justify-end'>
                     <button
                         onClick={() => dispatch(toggleSideBar())}
