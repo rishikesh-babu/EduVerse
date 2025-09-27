@@ -2,6 +2,10 @@
 
 An **offline-first, online-enhanced AI Teacher** designed to make education accessible, inclusive, and resilient for every child — anywhere in the world.
 
+## Live Link 🔗
+The Live Link of the Project is given below:
+
+### https://eduverse-a60j.onrender.com/
 ---
 
 ## 🚨 Problem
@@ -51,15 +55,33 @@ An **offline-first, online-enhanced AI Teacher** designed to make education acce
    git clone https://github.com/your-username/eduverse-ai.git
    cd eduverse-ai
 
-2. **Install Dependencies**
-    
+2. **Change Folder to Client**
+    ```bash
+    cd client
+
+3. **Install Dependencies**
+    ```bash
     npm install
 
-3. **Run The Development Server**
-
+4. **Run The Development Server**
+    ```bash
     npm run dev
 
-4. **Open The Local Host**
+**Backend Setup**
 
-    Open http://localhost:5173 in your browser.
+5. **Change Folder to server**
+    ```bash
+    cd server
+
+6. **Run npm**
+    ```bash
+    npm install
+
+    and then
+
+    ```bash
+    npm start
+
+
+
 
