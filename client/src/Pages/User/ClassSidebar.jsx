@@ -1,31 +1,88 @@
 // src/components/ClassSidebar.jsx
-import { useState } from 'react';
-import { subjectsByClass } from '../../Data/subjectsData';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { saveClassDetails } from '../../redux/features/classSlice';
+import axiosInstance from '../../Config/AxiosInstance';
+import { toast } from 'react-toastify';
 
 const ClassSidebar = () => {
   const [selectedClass, setSelectedClass] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [subjects, setSubjects] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // Generate class buttons from 1 to 12
-  const classButtons = Array.from({ length: 12 }, (_, i) => i + 1);
+  const dispatch = useDispatch();
+  const { classDetails } = useSelector((state) => state.class);
 
-  const handleClassClick = (classNumber) => {
-    setSelectedClass(classNumber);
+  useEffect(() => {
+    fetchClasses();
+  }, []);
+
+  useEffect(() => {
+    if (selectedClass) {
+      fetchSubjectsByClass(selectedClass._id);
+    }
+  }, [selectedClass]);
+
+  function fetchClasses() {
+    axiosInstance({
+      method: 'GET',
+      url: '/class/get-all-classes'
+    })
+      .then((res) => {
+        console.log('res :>> ', res);
+        dispatch(saveClassDetails(res?.data?.data));
+      })
+      .catch((err) => {
+        console.log('err :>> ', err);
+        toast.error(err?.response?.data?.message || 'Something went wrong');
+      });
+  }
+
+  function fetchSubjectsByClass(classId) {
+    setLoading(true);
+    axiosInstance({
+      method: 'GET',
+      url: `/subject/get-subject/${classId}`
+    })
+      .then((res) => {
+        console.log('Subjects res :>> ', res);
+        setSubjects(res?.data?.data || []);
+      })
+      .catch((err) => {
+        console.log('err :>> ', err);
+        toast.error(err?.response?.data?.message || 'Failed to fetch subjects');
+        setSubjects([]);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }
+
+  const handleClassClick = (classItem) => {
+    setSelectedClass(classItem);
     setSelectedSubject(null);
   };
 
   const handleSubjectClick = (subject) => {
     setSelectedSubject(subject);
+    // You can add additional logic here like dispatching to Redux
+    // dispatch(selectSubject(subject));
   };
 
   const handleBackToClasses = () => {
     setSelectedClass(null);
     setSelectedSubject(null);
+    setSubjects([]);
   };
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
+  };
+
+  const openFile = (fileUrl) => {
+    window.open(fileUrl, '_blank');
   };
 
   if (isCollapsed) {
@@ -54,9 +111,7 @@ const ClassSidebar = () => {
         </svg>
       </button>
 
-     
       <div className="w-80 h-full flex flex-col">
-      
         <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-4">
           <h2 className="text-xl font-bold mb-1">Classes & Subjects</h2>
           <p className="text-blue-100 text-sm">Select class and subject</p>
@@ -89,13 +144,13 @@ const ClassSidebar = () => {
             <>
               <h3 className="font-semibold text-gray-700 mb-3">Select Class</h3>
               <div className="grid grid-cols-2 gap-2">
-                {classButtons.map((classNum) => (
+                {classDetails?.map((classItem) => (
                   <button
-                    key={classNum}
-                    onClick={() => handleClassClick(classNum)}
+                    key={classItem._id}
+                    onClick={() => handleClassClick(classItem)}
                     className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-3 rounded-lg text-sm font-medium hover:from-blue-600 hover:to-indigo-700 transition-all transform hover:scale-105"
                   >
-                    Class {classNum}
+                    Class {classItem.name}
                   </button>
                 ))}
               </div>
@@ -104,34 +159,75 @@ const ClassSidebar = () => {
             <>
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-semibold text-gray-700">
-                  Class {selectedClass} Subjects
+                  Class {selectedClass.name} Subjects
                 </h3>
                 <span className="bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full text-xs font-medium">
-                  {subjectsByClass[selectedClass]?.length} subjects
+                  {subjects.length} subjects
                 </span>
               </div>
 
-              <div className="space-y-2">
-                {subjectsByClass[selectedClass]?.map((subject, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleSubjectClick(subject)}
-                    className={`w-full p-3 rounded-lg border transition-all text-left ${
-                      selectedSubject === subject
-                        ? 'bg-green-500 text-white border-green-500 shadow-md'
-                        : 'bg-white text-gray-700 border-gray-200 hover:border-green-400 hover:shadow-sm'
-                    }`}
-                  >
-                    <div className="font-medium">{subject}</div>
-                  </button>
-                ))}
-              </div>
+              {loading ? (
+                <div className="flex justify-center items-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                </div>
+              ) : subjects.length > 0 ? (
+                <div className="space-y-2">
+                  {subjects.map((subject) => (
+                    <div
+                      key={subject._id}
+                      className={`w-full p-3 rounded-lg border transition-all ${
+                        selectedSubject?._id === subject._id
+                          ? 'bg-green-500 text-white border-green-500 shadow-md'
+                          : 'bg-white text-gray-700 border-gray-200 hover:border-green-400 hover:shadow-sm'
+                      }`}
+                    >
+                      <div 
+                        className="font-medium cursor-pointer"
+                        onClick={() => handleSubjectClick(subject)}
+                      >
+                        {subject.name} {/* Changed from subject.subjectName to subject.name */}
+                      </div>
+                      {subject.file && (
+                        <div className="mt-2 flex justify-between items-center">
+                          <span className="text-xs text-gray-500">
+                            📚 Textbook available
+                          </span>
+                          <button
+                            onClick={() => openFile(subject.file)}
+                            className="text-xs bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 transition-colors"
+                          >
+                            View File
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <p>No subjects found for this class</p>
+                  <p className="text-sm">Add subjects in the admin panel</p>
+                </div>
+              )}
 
               {selectedSubject && (
                 <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
                   <p className="text-green-800 text-sm">
-                    <strong>Selected:</strong> {selectedSubject} (Class {selectedClass})
+                    <strong>Selected:</strong> {selectedSubject.name} (Class {selectedClass.name})
                   </p>
+                  {selectedSubject.file && (
+                    <div className="mt-2">
+                      <p className="text-green-700 text-xs">
+                        📚 Textbook: 
+                        <button 
+                          onClick={() => openFile(selectedSubject.file)}
+                          className="ml-2 text-blue-600 hover:text-blue-800 underline"
+                        >
+                          View File
+                        </button>
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
             </>
@@ -141,7 +237,7 @@ const ClassSidebar = () => {
         <div className="border-t border-gray-200 p-3 bg-gray-50">
           <div className="flex justify-between items-center">
             <span className="text-xs text-gray-500">
-              {selectedClass ? `${subjectsByClass[selectedClass]?.length} subjects` : '12 classes'}
+              {selectedClass ? `${subjects.length} subjects` : `${classDetails?.length || 0} classes`}
             </span>
             <button
               onClick={handleBackToClasses}
