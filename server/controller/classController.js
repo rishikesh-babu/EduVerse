@@ -28,7 +28,9 @@ async function getAllClasses(req, res, next) {
     try {
         console.log('Router: Get Classes')
 
-        const classes = await Class.find().sort
+        const classes = await Class.find().sort({ createdAt: -1 });
+
+        console.log('classes :>> ', classes);
 
         return res.status(200).json({ message: 'Classes fetched successfully', data: classes })
     } catch (err) {
@@ -37,6 +39,6 @@ async function getAllClasses(req, res, next) {
 }
 
 module.exports = {
-    createClass, 
+    createClass,
     getAllClasses
 }
