@@ -18,43 +18,69 @@ export default function Chat() {
     };
 
     useEffect(() => {
-        scrollToBottom();
-    }, [messages]);
+    const ws = new WebSocket("ws://localhost:5000/ws");
 
-    async function handleSendMessage(e) {
-        e.preventDefault();
-        if (!newMessage.trim()) return;
+    ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
 
-        const userMessage = {
-            id: Date.now(),
-            text: newMessage,
-            sender: 'user',
-        };
-
-        setMessages((prevMessages) => [...prevMessages, userMessage]);
-        setNewMessage('');
-        setIsLoading(true);
-
-        try {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            const botMessage = {
-                id: Date.now() + 1,
-                text: `This is a simulated response to "${newMessage}"`,
-                sender: 'bot',
-            };
-            setMessages((prevMessages) => [...prevMessages, botMessage]);
-        } catch (error) {
-            console.error("Error sending message:", error);
-            const errorMessage = {
-                id: Date.now() + 1,
-                text: 'Sorry, something went wrong. Please try again.',
-                sender: 'bot',
-            };
-            setMessages((prevMessages) => [...prevMessages, errorMessage]);
-        } finally {
-            setIsLoading(false);
+        if (data.tutor_response) {
+        setMessages((prev) => [
+            ...prev,
+            { id: Date.now(), text: data.tutor_response, sender: "bot" }
+        ]);
         }
     };
+
+    return () => ws.close();
+    }, []);
+
+    async function handleSendMessage(e) {
+    e.preventDefault();
+    if (!newMessage.trim()) return;
+
+    const userMessage = {
+        id: Date.now(),
+        text: newMessage,
+        sender: 'user',
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setNewMessage('');
+    setIsLoading(true);
+
+    try {
+        // 1. Send to backend
+        await fetch("http://localhost:5000/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: newMessage }),
+        });
+
+        // 2. Wait a bit for tutor_loop to process
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+
+        // 3. Fetch updated state
+        const res = await fetch("http://localhost:5000/state");
+        const data = await res.json();
+
+        const botMessage = {
+        id: Date.now() + 1,
+        text: data.tutor_response || "Sorry, no response.",
+        sender: 'bot',
+        };
+        setMessages((prev) => [...prev, botMessage]);
+
+    } catch (error) {
+        console.error("Error:", error);
+        setMessages((prev) => [...prev, {
+        id: Date.now() + 1,
+        text: "⚠️ Backend not reachable",
+        sender: 'bot',
+        }]);
+    } finally {
+        setIsLoading(false);
+    }
+    }
 
     function handleFileChange(e) {
         const file = e.target.files[0];
