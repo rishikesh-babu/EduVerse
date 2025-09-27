@@ -1,6 +1,11 @@
 export default function AboutPage() {
   return (
     <div className="bg-gradient-to-b from-white to-indigo-50 text-gray-800">
+      <br />
+      <br />
+      <div className="flex justify-center">
+      <img src="/EduVerse.png" alt="EduVerse_Logo" />
+      </div>
       {/* Who We Are */}
       <section className="max-w-5xl mx-auto px-6 py-20 text-center">
         <h1 className="text-5xl font-bold mb-6 text-indigo-700">👩‍💻 Who We Are</h1>
@@ -30,6 +35,19 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* Story Behind the Idea */}
+      <section className="max-w-5xl mx-auto px-6 py-12items-center">
+        <div className="space-y-4">
+          <h2 className="text-3xl font-semibold text-indigo-600 text-center">📖 The Story Behind the Idea 📖</h2>
+          <p className="text-lg leading-relaxed">
+            EduVerse started as a hackathon spark — an idea born from seeing
+            students struggle during power cuts and weak internet.  
+            In just 24 hours time, we transformed that problem into a working
+            prototype that learns, teaches, and adapts offline.
+          </p>
+        </div>
+      </section>
+
       {/* The Problem */}
       <section className="max-w-4xl mx-auto px-6 py-12 text-center">
         <h2 className="text-3xl font-semibold text-indigo-600 mb-4">🚨 The Problem We’re Solving 🚨</h2>
@@ -47,24 +65,6 @@ export default function AboutPage() {
         <p className="text-xl font-medium">
           “We want to ensure kids in rural areas can learn even without internet.”
         </p>
-      </section>
-
-      {/* Story Behind the Idea */}
-      <section className="max-w-5xl mx-auto px-6 py-12 grid md:grid-cols-2 gap-12 items-center">
-        <div className="space-y-4">
-          <h2 className="text-3xl font-semibold text-indigo-600">📖 The Story Behind the Idea</h2>
-          <p className="text-lg leading-relaxed">
-            EduVerse started as a hackathon spark — an idea born from seeing
-            students struggle during power cuts and weak internet.  
-            In just 24 hours time, we transformed that problem into a working
-            prototype that learns, teaches, and adapts offline.
-          </p>
-        </div>
-        <img
-          src="/EduVerse.png"
-          alt="EduVerse Hackathon"
-          className="w-72 mx-auto transform transition duration-500 hover:scale-105"
-        />
       </section>
 
       {/* Vision Beyond Hackathon */}
