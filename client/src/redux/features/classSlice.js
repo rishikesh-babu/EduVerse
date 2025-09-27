@@ -9,11 +9,11 @@ const classSlice = createSlice({
     initialState,
     reducers: {
         saveClassDetails: (state, action) => {
-            state.foodDetails = action.payload
+            state.classDetails = action.payload
         }
     }
 })
 
-export const {saveClassDetails, clearClassDetails } = classSlice.actions
+export const { saveClassDetails } = classSlice.actions
 const classReducer = classSlice.reducer
 export default classReducer
