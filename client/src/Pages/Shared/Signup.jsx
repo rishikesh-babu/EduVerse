@@ -159,6 +159,9 @@ export default function Signup() {
                     toast.success(res?.data?.message)
                     navigate('/')   
                 })
+                    .catch((err)=>{
+                        toast.error(err?.response?.data?.message)
+                    })
         )
     }
     return (
