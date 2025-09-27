@@ -8,10 +8,7 @@ import { saveUserData } from '../../redux/features/userSlice'
 
 
 export default function Login() {
-
-    const { isUserAuth, userData } = useSelector((state) => state.user)
     const dispatch = useDispatch()
-
     const navigate = useNavigate()
     const [credentials, setCredentials] = useState({
         email: '',
@@ -19,6 +16,10 @@ export default function Login() {
     })
     const [formErrors, setFormErrors] = useState({})
     const [isSubmitting, setIsSubmitting] = useState(false)
+
+    useEffect(() => {
+        window.scroll(0, 0)
+    }, [])
 
     const handleChange = (e) => {
         setCredentials({
