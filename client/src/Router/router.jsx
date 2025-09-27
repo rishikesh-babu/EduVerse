@@ -9,6 +9,7 @@ import Chat from "../Pages/Shared/Chat";
 import UserProtectedLayout from "./UserProtectedLayout";
 import AdminLayout from "./AdminLayout";
 import AdminHome from "../Pages/Admin/AdminHome";
+import CreateClass from "../Pages/Admin/CreateClass";
 
 const router = createBrowserRouter([
     {
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
             {
                 path: 'dashboard',
                 element: <AdminHome />
+            },
+            {
+                path: "createclass",
+                element: <CreateClass />
             },
         ]
 
