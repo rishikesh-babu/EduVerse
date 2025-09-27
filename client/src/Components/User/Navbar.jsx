@@ -11,13 +11,13 @@ export default function Navbar() {
     return (
         <header className="fixed top-0 left-0 flex w-full bg-white shadow-md">
 
-            <div className="flex-1 sm:flex justify-center items-center">
+            <Link to={'/'} className="flex-1 sm:flex justify-center items-center">
                 <img
                     src="/EduVerse.png"
                     alt="Logo"
                     className="h-[4.5rem] object-contain"
                 />
-            </div>
+            </Link>
 
             <div className="px-4 flex justify-center items-center">
                 <nav>{isUserAuth ?
