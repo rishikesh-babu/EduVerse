@@ -1,6 +1,8 @@
 import os
 import time
 import threading
+import re
+import json
 from dotenv import load_dotenv
 
 from langchain_openai import ChatOpenAI
@@ -8,11 +10,9 @@ from langchain.memory import ConversationBufferMemory
 from langchain.prompts import ChatPromptTemplate
 from langchain.output_parsers import ResponseSchema, StructuredOutputParser
 
-# Load API key from .env
 load_dotenv()
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
-# ✅ OpenRouter endpoint (OpenAI-compatible)
 llm = ChatOpenAI(
     model="mistralai/mistral-7b-instruct",
     api_key=OPENROUTER_API_KEY,
@@ -20,51 +20,59 @@ llm = ChatOpenAI(
     temperature=0.7
 )
 
-# Conversation memory
 memory = ConversationBufferMemory(return_messages=True)
 
-# Define structured schema
 response_schemas = [
     ResponseSchema(name="reply", description="Short supportive tutoring reply for the student"),
     ResponseSchema(name="next_step", description="Suggested next action, e.g., 'give example', 'ask quiz', 'repeat concept'")
 ]
 
 output_parser = StructuredOutputParser.from_response_schemas(response_schemas)
-
 format_instructions = output_parser.get_format_instructions()
 
-# Prompt template with JSON instructions
-prompt = ChatPromptTemplate.from_messages([
-    ("system", "You are EduVerse, a supportive AI tutor. Always reply in JSON."),
-    ("human", "Student said: {text}\nEmotion: {emotion}\n{format_instructions}")
-])
+prompt = ChatPromptTemplate.from_template(
+    "You are an adaptive tutor.\n"
+    "User said: {text}\n"
+    "Emotion: {emotion}\n\n"
+    "Reply helpfully. Output must be JSON.\n"
+    "{format_instructions}"
+)
+
+def sanitize_json(raw: str):
+    """Try to clean and load JSON safely."""
+    raw = raw.strip()
+
+    raw = re.sub(r"^```(json)?", "", raw)
+    raw = re.sub(r"```$", "", raw)
+    try:
+        return json.loads(raw)
+    except Exception:
+        return {"reply": raw, "next_step": "continue"}
 
 def tutor_loop(shared_state, lock, poll_interval=3):
-    """
-    Tutor loop with JSON-structured responses.
-    """
-    last_text = ""
-
     while True:
         time.sleep(poll_interval)
 
         with lock:
             text = shared_state.get("text", "")
             emotion = shared_state.get("emotion", "neutral")
+            processed = shared_state.get("processed", False)
 
-        if text and text != last_text:
+        if text and not processed:   # only respond if new and unprocessed
             print(f"[Tutor Agent] New input: {text} ({emotion})")
 
             try:
-                # Build input with format instructions
                 input_prompt = prompt.format_messages(
                     text=text,
                     emotion=emotion,
                     format_instructions=format_instructions
                 )
-
                 response = llm.invoke(input_prompt)
-                parsed = output_parser.parse(response.content)
+
+                try:
+                    parsed = output_parser.parse(response.content)
+                except Exception:
+                    parsed = sanitize_json(response.content)
 
                 reply = parsed.get("reply", "")
                 next_step = parsed.get("next_step", "")
@@ -72,6 +80,7 @@ def tutor_loop(shared_state, lock, poll_interval=3):
                 with lock:
                     shared_state["tutor_response"] = reply
                     shared_state["tutor_next_step"] = next_step
+                    shared_state["processed"] = False   # ✅ mark as handled
 
                 print(f"[Tutor Agent] Reply: {reply}")
                 print(f"[Tutor Agent] Next Step: {next_step}")
@@ -79,16 +88,11 @@ def tutor_loop(shared_state, lock, poll_interval=3):
             except Exception as e:
                 with lock:
                     shared_state["tutor_response"] = f"[Error] Tutor agent failed: {e}"
+                    shared_state["processed"] = True   # avoid retrying same input
                 print(f"[Tutor Agent] Error: {e}")
 
-            last_text = text
 
-
-# Standalone test
 if __name__ == "__main__":
-    import threading
-
     shared_state = {"text": "I don’t understand fractions.", "emotion": "frustrated"}
     lock = threading.Lock()
-
-    tutor_loop(shared_state, lock, poll_interval=0)  # run once
+    tutor_loop(shared_state, lock, poll_interval=0)
