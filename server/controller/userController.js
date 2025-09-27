@@ -74,7 +74,7 @@ async function userSignup(req, res, next) {
         saveUser = saveUser.toObject()
         delete saveUser.password
 
-        const token = generateToken(userExist, 'user')
+        const token = generateToken(saveUser, 'user')
         setCookies(res, token)
 
         return res.status(201).json({ message: 'User registered successfully', data: saveUser })
@@ -86,7 +86,7 @@ async function userSignup(req, res, next) {
 async function userLogout(req, res, next) {
     try {
         console.log('Routes: Logout')
-        
+
         clearCookies(res) 
         return res.status(200).json({ message: 'Logout successful' })
     } catch (err) {
