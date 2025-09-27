@@ -9,7 +9,8 @@ router.use((req, res, next) => {
     next()
 })
 
-router.post('/create', adminAuth, upload.single('raw'), createSubject)
+router.post('/create', adminAuth, upload.single('file'), createSubject)
+
 
 const subjectRouter = router
 module.exports = subjectRouter

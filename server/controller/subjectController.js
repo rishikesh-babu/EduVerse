@@ -1,5 +1,6 @@
 const { cloudinaryInstance } = require("../config/cloudinary");
 const Class = require("../Model/classModel");
+const Subject = require("../Model/subjectModel");
 
 async function createSubject(req, res, next) {
     try {
@@ -19,9 +20,9 @@ async function createSubject(req, res, next) {
             return res.status(400).json({ message: 'Class ID is required' });
         }
 
-        const clsasExist = await Class.findById({ classId });
+        const classExist = await Class.findOne({ _id: classId });
 
-        if (!clsasExist) {
+        if (!classExist) {
             return res.status(404).json({ message: 'Class does not exist' });
         }
 
@@ -30,11 +31,11 @@ async function createSubject(req, res, next) {
             public_id: name
         })).secure_url
 
-        const newSubject = { 
-            name, 
-            classId, 
+        const newSubject = new Subject({
+            name,
+            classId,
             file: imageUrl
-        }
+        })
 
         await newSubject.save();
         return res.status(201).json({ message: 'Subject created successfully', data: newSubject });
