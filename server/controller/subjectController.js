@@ -28,7 +28,8 @@ async function createSubject(req, res, next) {
 
         const imageUrl = (await cloudinaryInstance.uploader.upload(req.file.path, {
             folder: `Eduverse/Subject/${name}`,
-            public_id: name
+            public_id: name, 
+            resource_type: "raw"
         })).secure_url
 
         const newSubject = new Subject({
