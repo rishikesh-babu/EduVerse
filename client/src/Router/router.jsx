@@ -10,6 +10,7 @@ import UserProtectedLayout from "./UserProtectedLayout";
 import AdminLayout from "./AdminLayout";
 import AdminHome from "../Pages/Admin/AdminHome";
 import CreateClass from "../Pages/Admin/CreateClass";
+import CreateSubject from "../Pages/Admin/CreateSubject";
 
 const router = createBrowserRouter([
     {
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
             {
                 path: "createclass",
                 element: <CreateClass />
+            },
+            {
+                path: "createsubject",
+                element: <CreateSubject/>
             },
         ]
 

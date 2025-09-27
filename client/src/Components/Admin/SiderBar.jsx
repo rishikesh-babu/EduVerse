@@ -18,7 +18,7 @@ export const SiderBar = () => {
             label: 'Create Class'
         },
         {
-            link: '/admin',
+            link: '/admin/createsubject',
             label: 'Create Subject'
         },
     ]
