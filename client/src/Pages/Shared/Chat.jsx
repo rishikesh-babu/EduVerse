@@ -1,4 +1,6 @@
 import Video from '../../Components/Shared/Video'
+import ClassSidebar from '../User/ClassSidebar';
+
 import React, { useState, useEffect, useRef } from 'react';
 
 export default function Chat() {
@@ -113,6 +115,7 @@ export default function Chat() {
 
     return (
         <div className="h-[90dvh] bg-gray-900 text-gray-200 font-sans flex flex-col justify-between">
+           <className/>
             <main className="grow p-6 w-full max-w-4xl mx-auto overflow-y-auto flex flex-col gap-6">
                 {messages.map((message) => (
                     <div

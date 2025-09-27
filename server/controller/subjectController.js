@@ -28,7 +28,8 @@ async function createSubject(req, res, next) {
 
         const imageUrl = (await cloudinaryInstance.uploader.upload(req.file.path, {
             folder: `Eduverse/Subject/${name}`,
-            public_id: name
+            public_id: name, 
+            resource_type: "raw"
         })).secure_url
 
         const newSubject = new Subject({
@@ -56,7 +57,25 @@ async function getAllSubject(req, res, next) {
     }
 }
 
+async function getSubjects(req, res, next) {
+    try {
+        console.log("Routes: Get Subject by ID");
+        const { classId } = req.params;
+        
+        if (!classId) {
+            return res.status(400).json({ message: "Subject ID is required" })
+        }
+
+        const subjectExist = await Subject.find({ classId })
+
+        return res.status(200).json({ message: "Subject fetched successfully", data: subjectExist })
+    } catch (err) {
+        
+    }
+}
+
 module.exports = {
     createSubject, 
-    getAllSubject
+    getAllSubject, 
+    getSubjects
 }
