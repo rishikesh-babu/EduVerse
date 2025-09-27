@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken')
-const { User } = require('../model/userModel')
 
 async function userAuth(req, res, next) {
     try {
@@ -20,15 +19,9 @@ async function userAuth(req, res, next) {
 
         const role = decodedToken.role
 
-        console.log('roll :>> ', role);
         if (role !== 'user') {
             return res.status(401).json({ message: 'Unauthorized User' })
         }
-        // const userExist = await User.findById(userId).select('-password')
-
-        // if (!userExist) {
-        //     return res.status(401).json({ message: 'Unauthorized user' })
-        // }
 
         req.user = decodedToken
 

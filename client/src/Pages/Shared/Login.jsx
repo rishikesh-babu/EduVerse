@@ -2,8 +2,15 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axiosInstance from '../../Config/AxiosInstance'
 import { toast } from 'react-toastify'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { saveUserData } from '../../redux/features/userSlice'
+
 
 export default function Login() {
+
+    const { isUserAuth, userData } = useSelector((state) => state.user)
+    const dispatch = useDispatch()
 
     const navigate = useNavigate()
     const [credentials, setCredentials] = useState({
@@ -35,13 +42,16 @@ export default function Login() {
                 .then((res) => {
                     console.log('res :>> ', res);
                     console.log('res?.data?.message :>> ', res?.data?.message);
-                    toast.success(res.data.message)
+                    toast.success(res?.data?.message)
+                    dispatch(saveUserData(res?.data?.data));
+                    res?.data?.data?.role === "admin" ? navigate("/admin/dashboard") : navigate("/")
+
                 })
                 .catch((err) => {
                     console.log('err :>> ', err);
-                    console.log('err.response?.data?.message :>> ', err.response?.data?.message);
-                    toast.error(err.response?.data?.message || 'Something went wrong')
-                }), 
+                    console.log('err.response?.data?.message :>> ', err?.response?.data?.message);
+                    toast.error(err?.response?.data?.message || 'Something went wrong')
+                }),
             {
                 pending: 'Logging in...',
             }

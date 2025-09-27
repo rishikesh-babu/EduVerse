@@ -6,35 +6,60 @@ import Signup from "../Pages/Shared/Signup";
 import ErrorElement from "../Components/Shared/ErrorElement";
 import About from "../Pages/User/About";
 import Chat from "../Pages/Shared/Chat";
+import UserProtectedLayout from "./UserProtectedLayout";
+import AdminLayout from "./AdminLayout";
+import AdminHome from "../Pages/Admin/AdminHome";
+import CreateClass from "../Pages/Admin/CreateClass";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <UserLayout />,
-        errorElement: <ErrorElement />, 
+        errorElement: <ErrorElement />,
         children: [
             {
-                path: '/', 
+                path: '/',
                 element: <Home />
-            }, 
+            },
             {
-                path: 'login', 
+                path: 'login',
                 element: <Login />
             },
             {
-                path: 'about', 
+                path: 'about',
                 element: <About />
             },
             {
-                path: 'signup', 
+                path: 'signup',
                 element: <Signup />
             },
             {
-                path: 'chat', 
-                element: <Chat/>
+                path: 'user',
+                element: <UserProtectedLayout />,
+                children: [
+                    {
+                        path: 'chat',
+                        element: <Chat />
+                    }
+                ]
             }
         ]
     },
+    {
+        path: 'admin',
+        element: <AdminLayout />,
+        children: [
+            {
+                path: 'dashboard',
+                element: <AdminHome />
+            },
+            {
+                path: "createclass",
+                element: <CreateClass />
+            },
+        ]
+
+    }
 ])
 
 export default router;

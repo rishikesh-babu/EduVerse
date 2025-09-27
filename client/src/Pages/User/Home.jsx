@@ -16,7 +16,7 @@ export default function LandingPage() {
           An offline-first, online-enhanced AI Teacher making education
           accessible, inclusive, and resilient for every child — anywhere in the world.
         </p>
-        <button onClick={() => navigate('/chat')} className="px-6 py-3 bg-indigo-600 text-white rounded-2xl shadow-lg hover:bg-indigo-700 transition">
+        <button onClick={() => navigate('/user/chat')} className="px-6 py-3 bg-indigo-600 text-white rounded-2xl shadow-lg hover:bg-indigo-700 transition">
           🚀 Try Demo
         </button>
       </section>
