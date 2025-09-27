@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { Navigate, useNavigate } from "react-router-dom";
-import Class from "./Class";
 
 export default function LandingPage() {
 
@@ -96,7 +95,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-      <Class/>
     </div>
   );
 }
