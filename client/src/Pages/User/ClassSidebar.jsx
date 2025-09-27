@@ -14,6 +14,7 @@ const ClassSidebar = () => {
 
   const dispatch = useDispatch();
   const { classDetails } = useSelector((state) => state.class);
+  const sortedClasses = classDetails ? [...classDetails].sort((a, b) => a.name - b.name) : [];
 
   useEffect(() => {
     fetchClasses();
@@ -144,7 +145,7 @@ const ClassSidebar = () => {
             <>
               <h3 className="font-semibold text-gray-700 mb-3">Select Class</h3>
               <div className="grid grid-cols-2 gap-2">
-                {classDetails?.map((classItem) => (
+                {sortedClasses?.map((classItem) => (
                   <button
                     key={classItem._id}
                     onClick={() => handleClassClick(classItem)}
