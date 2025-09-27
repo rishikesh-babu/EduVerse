@@ -44,6 +44,19 @@ async function createSubject(req, res, next) {
     }
 }
 
+async function getAllSubject(req, res, next) {
+    try {
+        console.log('Router: Get All Subjects');
+
+        const subjectExist = await Subject.find().sort({ createdAt: -1 });
+
+        return res.status(200).json({ message: 'Subjects fetched successfully', data: subjectExist });
+    } catch (err) {
+        next(err)
+    }
+}
+
 module.exports = {
-    createSubject
+    createSubject, 
+    getAllSubject
 }
