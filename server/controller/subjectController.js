@@ -56,7 +56,25 @@ async function getAllSubject(req, res, next) {
     }
 }
 
+async function getSubjects(req, res, next) {
+    try {
+        console.log("Routes: Get Subject by ID");
+        const { id } = req.params;
+        
+        if (!id) {
+            return res.status(400).json({ message: "Subject ID is required" })
+        }
+
+        const subjectExist = await Subject.findMany({ _id: id })
+
+        return res.status(200).json({ message: "Subject fetched successfully", data: subjectExist })
+    } catch (err) {
+        
+    }
+}
+
 module.exports = {
     createSubject, 
-    getAllSubject
+    getAllSubject, 
+    getSubjects
 }
