@@ -4,16 +4,12 @@ import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { toggleSideBar } from '../../redux/features/sideBarSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function AdminNavBar({ children }) {
     const location = useLocation()
-    const [open, setOpen] = useState(false);
-    const dispatch = useDispatch()
 
-    useEffect(() => {
-        setOpen(false)
-    }, [location.pathname])
+    let sidebar = useSelector((state)=>state.SiderBar)
 
     return (
         <>
