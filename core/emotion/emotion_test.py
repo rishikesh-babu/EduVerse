@@ -2,7 +2,7 @@ import cv2
 from deepface import DeepFace
 from collections import deque, Counter
 
-# Reweight emotions (boost anger/sad for frustration signals)
+
 WEIGHTS = {
     "happy": 0.6,
     "neutral": 0.6,
@@ -13,17 +13,17 @@ WEIGHTS = {
     
 }
 
-CONF_THRESHOLD = 0.5  # only accept if confident
-history = deque(maxlen=10)  # rolling buffer to smooth flicker
+CONF_THRESHOLD = 0.5  
+history = deque(maxlen=10)  
 
 def remap_emotion(emotion):
     """ Map raw model emotions to EduVerse categories """
     if emotion == "disgust":
-        return None  # drop it entirely
+        return None  
     elif emotion in ["angry", "fear", "sad"]:
         return "frustrated"
     else:
-        return emotion  # happy, neutral, surprise
+        return emotion  
 
 def run_emotion(shared_state, cam_index=1):
     cap = cv2.VideoCapture(cam_index, cv2.CAP_DSHOW)

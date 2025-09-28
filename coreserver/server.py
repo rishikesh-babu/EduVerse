@@ -9,7 +9,6 @@ import sys, os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-
 # Import your loops
 from core.stt.stt import run_stt
 from core.emotion.emotion_test import run_emotion
@@ -26,20 +25,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Shared state
 shared_state = {
     "text": "",
     "emotion": "neutral",
     "tutor_response": "",
-    "tutor_next_step": ""
+    "tutor_next_step": "",
+    "processed": True   # start as True so tutor does nothing until new message
 }
 lock = threading.Lock()
 
-# For /ask POST requests
 class AskRequest(BaseModel):
     text: str
-
-# --- REST Endpoints ---
 
 @app.get("/state")
 async def get_state():
@@ -49,12 +45,10 @@ async def get_state():
 
 @app.post("/ask")
 async def ask_tutor(req: AskRequest):
-    """Receive typed input from student and update shared_state."""
     with lock:
         shared_state["text"] = req.text
+        shared_state["processed"] = False  
     return {"status": "ok", "message": "Text received"}
-
-# --- WebSocket Endpoint ---
 
 @app.websocket("/ws")
 async def websocket_endpoint(ws: WebSocket):
@@ -64,7 +58,7 @@ async def websocket_endpoint(ws: WebSocket):
 
     try:
         while True:
-            await asyncio.sleep(1)  # send every 1s (tweak as needed)
+            await asyncio.sleep(1)  
             with lock:
                 snapshot = shared_state.copy()
 
@@ -73,12 +67,14 @@ async def websocket_endpoint(ws: WebSocket):
                 await ws.send_text(json.dumps(snapshot))
                 last_snapshot = snapshot
 
+                # ✅ Clear tutor response & next_step after sending once
+                with lock:
+                    shared_state["tutor_response"] = ""
+                    shared_state["tutor_next_step"] = ""
     except Exception as e:
         print(f"[WebSocket] Disconnected: {e}")
     finally:
         await ws.close()
-
-# --- Background loops ---
 
 def start_background_loops():
     threads = [

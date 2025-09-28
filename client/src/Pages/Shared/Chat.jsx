@@ -1,4 +1,3 @@
-
 import Video from '../../Components/Shared/Video'
 import ClassSidebar from '../User/ClassSidebar';
 
@@ -17,97 +16,106 @@ export default function Chat() {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
+    // Auto scroll on every new message
     useEffect(() => {
-    const ws = new WebSocket("ws://localhost:5000/ws");
+        scrollToBottom();
+    }, [messages]);
 
-    ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
+    // 🔄 WebSocket connection for live tutor + STT updates
+    useEffect(() => {
+        const ws = new WebSocket("ws://localhost:5000/ws");
+        let lastUserText = "";
+        let lastBotText = "";
 
-        if (data.tutor_response) {
-        setMessages((prev) => [
-            ...prev,
-            { id: Date.now(), text: data.tutor_response, sender: "bot" }
-        ]);
-        }
-    };
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
 
-    return () => ws.close();
+            // 🎤 Show STT converted user speech (only if new)
+            if (data.text && data.text !== lastUserText) {
+                lastUserText = data.text;
+                setMessages((prev) => [
+                    ...prev,
+                    { id: Date.now(), text: data.text, sender: "user" }
+                ]);
+            }
+
+            // 🤖 Show Tutor Agent reply (only if not empty & new)
+            if (data.tutor_response && data.tutor_response !== lastBotText) {
+                lastBotText = data.tutor_response;
+                setMessages((prev) => [
+                    ...prev,
+                    { id: Date.now() + 1, text: data.tutor_response, sender: "bot" }
+                ]);
+            }
+        };
+
+        return () => ws.close();
     }, []);
 
+    // Handle typed input
     async function handleSendMessage(e) {
-    e.preventDefault();
-    if (!newMessage.trim()) return;
+        e.preventDefault();
+        if (!newMessage.trim()) return;
 
-    const userMessage = {
-        id: Date.now(),
-        text: newMessage,
-        sender: 'user',
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
-    setNewMessage('');
-    setIsLoading(true);
-
-    try {
-        // 1. Send to backend
-        await fetch("http://localhost:5000/ask", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: newMessage }),
-        });
-
-        // 2. Wait a bit for tutor_loop to process
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-
-        // 3. Fetch updated state
-        const res = await fetch("http://localhost:5000/state");
-        const data = await res.json();
-
-        const botMessage = {
-        id: Date.now() + 1,
-        text: data.tutor_response || "Sorry, no response.",
-        sender: 'bot',
+        const userMessage = {
+            id: Date.now(),
+            text: newMessage,
+            sender: 'user',
         };
-        setMessages((prev) => [...prev, botMessage]);
 
-    } catch (error) {
-        console.error("Error:", error);
-        setMessages((prev) => [...prev, {
-        id: Date.now() + 1,
-        text: "⚠️ Backend not reachable",
-        sender: 'bot',
-        }]);
-    } finally {
-        setIsLoading(false);
-    }
+        setMessages((prev) => [...prev, userMessage]);
+        setNewMessage('');
+        setIsLoading(true);
+
+        try {
+            // Send to backend
+            await fetch("http://localhost:5000/ask", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text: newMessage }),
+            });
+
+            // Wait a bit for tutor_loop to process
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+
+            // Fetch updated state
+            const res = await fetch("http://localhost:5000/state");
+            const data = await res.json();
+
+            if (data.tutor_response) {
+                const botMessage = {
+                    id: Date.now() + 1,
+                    text: data.tutor_response,
+                    sender: 'bot',
+                };
+                setMessages((prev) => [...prev, botMessage]);
+            }
+
+        } catch (error) {
+            console.error("Error:", error);
+            setMessages((prev) => [...prev, {
+                id: Date.now() + 1,
+                text: "⚠️ Backend not reachable",
+                sender: 'bot',
+            }]);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     function handleFileChange(e) {
         const file = e.target.files[0];
-        console.log('file :>> ', file);
         if (file) {
             const fileURL = URL.createObjectURL(file);
-            setFileInput({
-                url: fileURL,
-                file
-            })
+            setFileInput({ url: fileURL, file });
         } else {
             setFileInput(null);
         }
     }
 
-    console.log('fileInput :>> ', fileInput);
-
     return (
         <div className="h-[90dvh] bg-gray-900 text-gray-200 font-sans flex flex-col justify-between">
-            {/* <header className="sticky top-0 z-10 bg-gray-800/50 backdrop-blur-sm border-b border-gray-700">
-                <div className="max-w-4xl mx-auto p-4">
-                    <h1 className="text-xl font-bold text-center bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
-                        AiChatBot
-                    </h1>
-                </div>
-            </header> */}
-            <ClassSidebar/>
+           <ClassSidebar/>
             <main className="grow p-6 w-full max-w-4xl mx-auto overflow-y-auto flex flex-col gap-6">
                 {messages.map((message) => (
                     <div
@@ -159,7 +167,7 @@ export default function Chat() {
                     </div>
                 )}
 
-                <div className="flex items-center gap-2" onSubmit={handleSendMessage}>
+                <form className="flex items-center gap-2" onSubmit={handleSendMessage}>
                     <div className="hover:scale-105">
                         <label htmlFor="fileInput" className='cursor-pointer '>
                             <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="40px" fill="#fff">
@@ -186,14 +194,14 @@ export default function Chat() {
                     />
                     <button
                         className='fill-white select-none cursor-pointer hover:scale-105 transition-all duration-200 '
-                        onClick={handleSendMessage}
+                        type="submit"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill=""><path d="M452-244v-400L282-477l-42-43 241-241 241 241-42 42-168-168v402h-60Z" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="">
+                            <path d="M452-244v-400L282-477l-42-43 241-241 241 241-42 42-168-168v402h-60Z" />
+                        </svg>
                     </button>
-
-                </div>
+                </form>
             </footer>
         </div>
     )
 }
-

@@ -5,7 +5,6 @@ import pyaudio
 from vosk import Model, KaldiRecognizer
 from langdetect import detect
 
-# Base directory of this script (core/stt/)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 LANG_TO_PATH = {
@@ -21,9 +20,8 @@ def load_model(lang):
     print(f"[STT] Loading model: {lang}")
     return Model(model_path)
 
-def run_stt(shared_state, lang="auto"):
-    # Default to Indian English if auto
-    current_lang = "en-in"
+def run_stt(shared_state, lock, lang="auto"):
+    current_lang = "en-us"
     model = load_model(current_lang)
     recognizer = KaldiRecognizer(model, 16000)
 
@@ -32,10 +30,11 @@ def run_stt(shared_state, lang="auto"):
                       input=True, frames_per_buffer=8192)
     stream.start_stream()
 
-    print("🎤 STT running... (speak something)")
+    print("I am Listening..... (speak something)")
 
     samples_for_detection = []
     switched = False
+    last_text = ""   # ✅ track last finalized text
 
     while True:
         data = stream.read(4096, exception_on_overflow=False)
@@ -45,25 +44,29 @@ def run_stt(shared_state, lang="auto"):
             if not text:
                 continue
 
-            # Collect samples for language detection
+            # 🔎 Auto language detection once
             if lang == "auto" and not switched:
                 samples_for_detection.append(text)
-                if len(samples_for_detection) >= 3:  # after 3 phrases
+                if len(samples_for_detection) >= 3:  
                     joined = " ".join(samples_for_detection)
                     try:
                         detected = detect(joined)
                         print(f"[LangDetect] Detected language: {detected}")
                         if detected == "hi" and current_lang != "hi":
-                            # Reload Hindi model
                             model = load_model("hi")
                             recognizer = KaldiRecognizer(model, 16000)
                             current_lang = "hi"
                             print("🔄 Switched STT to Hindi model")
                         else:
                             print("✅ Keeping English model")
-                        switched = True  # lock choice
+                        switched = True  
                     except Exception as e:
                         print(f"[LangDetect Error] {e}")
 
-            shared_state["text"] = text
-            print(f"[FINAL] {text} | Emotion: {shared_state['emotion']}")
+            # ✅ Only update if it's different from the last recognized text
+            if text != last_text:
+                with lock:
+                    shared_state["text"] = text
+                    shared_state["processed"] = False  
+                print(f"[FINAL] {text} | Emotion: {shared_state['emotion']}")
+                last_text = text
